@@ -79,8 +79,8 @@ mostrarNombre();
 */
 
 
+
 const fs = require('fs');
-const { json } = require('stream/consumers');
 
 class Contenedor{
     constructor(ruta){
@@ -102,10 +102,80 @@ class Contenedor{
         }
     }
 
-}
+    async getById(id){
+        try{
+            let data = await fs.promises.readFile(this.ruta, "utf8");
+            let dataParse = JSON.parse(data);
+            let producto = dataParse.find(producto => producto.id === id)
+            if(producto){
+                console.log(producto)
+            }else{
+                return null
+            }
 
+        }catch(error){
+            console.log(error);
+        }
+    }
+
+    async getAll(){
+
+        try{
+            let data = await fs.promises.readFile(this.ruta, "utf8");
+            let dataParse = JSON.parse(data);
+            if(dataParse.length){
+                console.log(dataParse)
+            }else{
+                console.log("No hay productos");
+            }
+
+        }catch(error){
+            console.log(error);  
+        }
+
+    }
+
+    async deleteById(id){
+
+        try{
+            let data = await fs.promises.readFile(this.ruta, "utf8");
+            let dataParse = JSON.parse(data);
+            let producto = dataParse.find(producto => producto.id === id)
+            if(producto){
+                const dataParseFiltrado = dataParse.filter(producto => producto.id !== id)
+                await fs.promises.writeFile(this.ruta, JSON.stringify( dataParseFiltrado, null, 2), "utf-8" )
+                console.log("El producto fue eliminado")
+            }else{
+                console.log("No se encontro el producto")
+            }
+        }catch(error){
+            console.log(error);  
+        }
+    }
+
+    async deleteAll(){
+       try{
+            let data = await fs.promises.readFile(this.ruta, "utf8");
+            let dataParse = JSON.parse(data);
+            dataParse = [];
+            await fs.promises.writeFile(this.ruta, JSON.stringify( dataParse, null, 2), "utf-8" )
+            console.log("Los productos fueron eliminados")
+        
+
+       }catch(error){
+            console.log(error);  
+       }
+
+    }
+
+ }
 
 const contenedor = new Contenedor("./prueba.txt");
-contenedor.save({nombre:"carlos", edad:32});
+//contenedor.save({nombre:"carlos", precio:100, foto:"www.foto.com"});
+//contenedor.getById(4);
+//contenedor.getAll();
+//contenedor.deleteById(5);
+contenedor.deleteAll();
 
-console.log(contenedor);
+
+
