@@ -89,7 +89,7 @@ class Contenedor{
 
     async save(obj){
         try{
-            let data = await fs.promises.readFile(this.ruta, "utf8");
+            let data = await fs.promises.readFile(this.ruta, "utf-8");
             let dataParse = JSON.parse(data);
             if(dataParse.length){
                 await fs.promises.writeFile(this.ruta, JSON.stringify( [... dataParse, {...obj, id: dataParse.length + 1} ], null, 2 ) )
@@ -102,13 +102,33 @@ class Contenedor{
         }
     }
 
+    async saveById(obj){
+
+        try{
+
+            let data = await fs.promises.readFile(this.ruta, "utf-8");
+            let dataParse = JSON.parse(data);
+            const objIndex = dataParse.findIndex(prod => prod.id === obj.id)
+            if(obj.index !== -1){
+                dataParse[objIndex] = obj
+                await fs.promises.writeFile(this.ruta, JSON.stringify( dataParse , null, 2 ) )
+                return {msg: "El producto fue actualizado"}
+            }else{
+                return null;
+            }
+
+        }catch(error){
+            console.log(error);
+        }
+    }
+
     async getById(id){
         try{
-            let data = await fs.promises.readFile(this.ruta, "utf8");
+            let data = await fs.promises.readFile(this.ruta, "utf-8");
             let dataParse = JSON.parse(data);
             let producto = dataParse.find(producto => producto.id === id)
             if(producto){
-                console.log(producto)
+                return producto
             }else{
                 return null
             }
@@ -121,12 +141,12 @@ class Contenedor{
     async getAll(){
 
         try{
-            let data = await fs.promises.readFile(this.ruta, "utf8");
+            let data = await fs.promises.readFile(this.ruta, "utf-8");
             let dataParse = JSON.parse(data);
             if(dataParse.length){
-                console.log(dataParse)
+                return dataParse
             }else{
-                console.log("No hay productos");
+                return null
             }
 
         }catch(error){
@@ -138,7 +158,7 @@ class Contenedor{
     async deleteById(id){
 
         try{
-            let data = await fs.promises.readFile(this.ruta, "utf8");
+            let data = await fs.promises.readFile(this.ruta, "utf-8");
             let dataParse = JSON.parse(data);
             let producto = dataParse.find(producto => producto.id === id)
             if(producto){
@@ -155,7 +175,7 @@ class Contenedor{
 
     async deleteAll(){
        try{
-            let data = await fs.promises.readFile(this.ruta, "utf8");
+            let data = await fs.promises.readFile(this.ruta, "utf-8");
             let dataParse = JSON.parse(data);
             dataParse = [];
             await fs.promises.writeFile(this.ruta, JSON.stringify( dataParse, null, 2), "utf-8" )
@@ -171,11 +191,18 @@ class Contenedor{
  }
 
 const contenedor = new Contenedor("./prueba.txt");
-//contenedor.save({nombre:"carlos", precio:100, foto:"www.foto.com"});
-//contenedor.getById(4);
-//contenedor.getAll();
-//contenedor.deleteById(5);
-contenedor.deleteAll();
+contenedor.getById(5); 
+
+
+module.exports =   { Contenedor }
+
+
+
+
+
+
+
+
 
 
 

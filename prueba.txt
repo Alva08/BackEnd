@@ -1,1 +1,50 @@
-[]
+[
+  {
+    "nombre": "carlos",
+    "precio": 100,
+    "foto": "www.foto.com",
+    "id": 1
+  },
+  {
+    "nombre": "carlos",
+    "precio": 100,
+    "foto": "www.foto.com",
+    "id": 2
+  },
+  {
+    "nombre": "carlos",
+    "precio": 100,
+    "foto": "www.foto.com",
+    "id": 3
+  },
+  {
+    "nombre": "carlos",
+    "precio": 100,
+    "foto": "www.foto.com",
+    "id": 4
+  },
+  {
+    "nombre": "carlos",
+    "precio": 100,
+    "foto": "www.foto.com",
+    "id": 5
+  },
+  {
+    "nombre": "carlos",
+    "precio": 100,
+    "foto": "www.foto.com",
+    "id": 6
+  },
+  {
+    "nombre": "carlos",
+    "precio": 100,
+    "foto": "www.foto.com",
+    "id": 7
+  },
+  {
+    "nombre": "carlos",
+    "precio": 100,
+    "foto": "www.foto.com",
+    "id": 8
+  }
+]
