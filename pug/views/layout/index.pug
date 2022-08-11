@@ -1,0 +1,23 @@
+html
+    head
+        title="pug"
+    body
+        - var productos = {productos}
+        section 
+            h1 formulario
+            form
+                <input type="text" name="nombre" placeholder="Nombre">
+                <br>
+                <input type="text" name="descripcion" placeholder="descripcion">
+                <br>
+                <input type="number" name="price" placeholder="precio">
+                <br>
+                <input type="submit" value="Enviar">
+        hr
+        section 
+            h1 productos 
+            ul
+                each prod in productos
+                    li= prod
+                else
+                    li There are no values

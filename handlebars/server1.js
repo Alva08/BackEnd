@@ -82,6 +82,7 @@ const server = app.listen(PORT, ()=>{
 
 
 
+/*
 const express = require ("express");
 const {Router} = express;
 const {Contenedor} = require("./contenedor.js")
@@ -164,37 +165,78 @@ app.use("/productos", routerProductos);
 
 
 
-
-
-
-
-
- 
-
-
 const PORT = process.env.PORT || 8000
 const server = app.listen(PORT, ()=>{
     console.log(`Servidor corriendo en el puerto ${server.address().port}`)
 }) 
+*/
  
 
 
 /*
-
 {id:1, nombre:"Plomada", precio:100},
 {id:2, nombre:"Roldana", precio:100},
 {id:3, nombre:"Tensor", precio:100},
 {id:4, nombre:"Rastrillo", precio:100} 
 
 Math.floor(Math.random()*productos.length)
-
 */
 
 
+// ----------------------------------------------------- HANDLESBAR, PUG Y EJS -----------------------------------------------------------------------------------
 
 
 
+const express = require("express")
+const app = express()
+const {Router} = express
+const handlebars = require('express-handlebars')
+const PORT = 4000
+
+const productos = []
+
+app.engine(
+    'hbs', 
+    handlebars.engine({
+        extname: '.hbs',
+        defaultLayout: 'index.hbs',
+        layoutsDir: __dirname + '/views/layout',
+        partialsDir: __dirname + '/views'
+    })
+)
 
 
+app.set('view engine', 'hbs')
+app.set('views', './views/layout')
+
+app.use(express.static('public'))
+
+const routerProductos = Router()
+
+routerProductos.get('/', (req, res) => {
+    res.render('index.hbs', {listExist: true, list: productos })
+})
+
+routerProductos.post("/", (req, res) => {
+    console.log(req.body)
+    const {nombre, price, descripcion} = req.body
+
+    productos.push({
+        nombre,
+        price,
+        descripcion
+    })
+    res.render('index.hbs',{
+        productos
+    })
+
+})
+
+app.use("/productos", routerProductos)
+
+
+app.listen(PORT, ()=>{
+    console.log(`Servidor corriendo en el puerto ${PORT}`)
+}) 
 
 
