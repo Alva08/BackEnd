@@ -187,7 +187,7 @@ Math.floor(Math.random()*productos.length)
 
 
 
-const express = require("express")
+/* const express = require("express")
 const app = express()
 const {Router} = express
 const handlebars = require('express-handlebars')
@@ -199,7 +199,7 @@ app.engine(
     'hbs', 
     handlebars.engine({
         extname: '.hbs',
-        defaultLayout: 'index.hbs',
+        defaultLayout: 'formulario.hbs',
         layoutsDir: __dirname + '/views/layout',
         partialsDir: __dirname + '/views'
     })
@@ -211,32 +211,86 @@ app.set('views', './views/layout')
 
 app.use(express.static('public'))
 
+const routerFormulario = Router();
 const routerProductos = Router()
 
-routerProductos.get('/', (req, res) => {
-    res.render('index.hbs', {listExist: true, list: productos })
+routerFormulario.get('/', (req, res) => {
+    res.render('formulario.hbs',)
 })
 
-routerProductos.post("/", (req, res) => {
+routerFormulario.post("/", (req, res) => {
     console.log(req.body)
     const {nombre, price, descripcion} = req.body
-
     productos.push({
         nombre,
         price,
         descripcion
     })
-    res.render('index.hbs',{
+    console.log(productos)
+    res.render('formulario.hbs',{
         productos
     })
 
-})
+}) 
 
-app.use("/productos", routerProductos)
+app.use("/", routerFormulario)
+
+
+
+
 
 
 app.listen(PORT, ()=>{
     console.log(`Servidor corriendo en el puerto ${PORT}`)
 }) 
+*/
 
+
+// ----------------------------------------------------------- primera entrega proyecto final ----------------------------------------------------------------------
+
+
+const express = require("express")
+const {Router} = express
+const app = express();
+
+app.use(express.json());
+
+const productos = [{
+    "id": 1,
+    "nombre": "plomada",
+    "precio": 100
+},
+{
+    "id": 2,
+    "nombre": "rastrillo",
+    "precio": 200
+}]
+
+//const routerProducts = Router();
+
+app.get('/api/productos', (req, res) => {
+    res.json({
+        productos
+    })
+})
+
+app.post("/api/productos", (req,res) => {
+    const productos = {
+        id: productos.length + 1,
+        nombre: req.body.nombre,
+        precio: parseInt(req.body.precio)
+    }
+
+    productos.push(productos)
+
+    res.send({
+        productos
+    })
+
+})
+
+
+const server = app.listen(4000, () => {
+    console.log(`Escuchando en el puerto ${server.address().port}`)
+})
 
