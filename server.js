@@ -249,11 +249,12 @@ app.listen(PORT, ()=>{
 // ----------------------------------------------------------- primera entrega proyecto final ----------------------------------------------------------------------
 
 
-const express = require("express")
-const {Router} = express
+const express = require("express");
+const {Router} = express;
 const app = express();
 
 app.use(express.json());
+app.use(express.static("public"));
 
 const productos = [{
     "id": 1,
@@ -264,17 +265,43 @@ const productos = [{
     "id": 2,
     "nombre": "rastrillo",
     "precio": 200
-}]
+},
+{
+    "id": 3,
+    "nombre": "tensor",
+    "precio": 300
+}
+];
 
-//const routerProducts = Router();
+const carrito = [];
 
-app.get('/api/productos', (req, res) => {
+
+const routerProducts = Router();
+const routerCarrito =  Router();
+
+
+
+
+routerProducts.get('/', (req, res) => {
     res.json({
         productos
     })
 })
 
-app.post("/api/productos", (req,res) => {
+
+
+routerProducts.get("/:id", (res, req) => {
+    const producto = productos.find( p => p.id === req.params.id)
+    if(!producto){
+        return res.statusCode(404).send("El producto no ha sido encontrado");
+    }else{
+        res.json(
+            producto
+        )
+    }
+})
+
+routerProducts.post("/", (req,res) => {
     const newProducto = {
         id: productos.length + 1,
         nombre: req.body.nombre,
@@ -288,6 +315,56 @@ app.post("/api/productos", (req,res) => {
     })
 
 })
+
+routerProducts.delete("/:id",(req, res) => {
+    const producto = productos.find( p => p.id === req.params.id)
+    if(!producto){
+        return res.status(404).send("El producto no ha sido encontrado");
+    }else{
+        const index = productos.indexOf(producto)
+        producto.splice(index, 1)
+        res.send(producto)
+    }
+})
+
+app.use("/api/productos", routerProducts);
+
+
+
+
+routerCarrito.post("/:id", (req, res) => {
+    const producto = productos.find( p => p.id === req.params.id)
+    if(!producto){
+        return res.statusCode(404).send("El producto no ha sido encontrado");
+    }else{
+        carrito.push(producto)
+    }
+})
+
+routerCarrito.delete("/", (req, res) => {
+    for (let i = carrito.length; i > 0; i--) {
+        carrito.pop();
+    }
+})
+
+routerCarrito.get("/", (req, res) => {
+    res.json(
+        carrito
+    )
+})
+
+routerCarrito.delete("/:id", (req, res) => {
+    const producto = carrito.find( p => p.id === req.params.id)
+    if(!producto){
+        return res.status(404).send("El producto no ha sido encontrado");
+    }else{
+        const index = carrito.indexOf(producto)
+        producto.splice(index, 1)
+    }
+})
+
+app.use("/api/carrito", routerCarrito);
+
 
 
 const server = app.listen(4000, () => {
