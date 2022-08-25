@@ -275,13 +275,13 @@ app.get('/api/productos', (req, res) => {
 })
 
 app.post("/api/productos", (req,res) => {
-    const productos = {
+    const newProducto = {
         id: productos.length + 1,
         nombre: req.body.nombre,
         precio: parseInt(req.body.precio)
     }
 
-    productos.push(productos)
+    productos.push(newProducto)
 
     res.send({
         productos
