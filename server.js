@@ -249,6 +249,7 @@ app.listen(PORT, ()=>{
 // ----------------------------------------------------------- primera entrega proyecto final ----------------------------------------------------------------------
 
 
+/* 
 const express = require("express");
 const {Router} = express;
 const app = express();
@@ -347,10 +348,10 @@ routerCarrito.delete("/", (req, res) => {
     }
 })
 
-routerCarrito.get("/", (req, res) => {
-    res.json(
+routerCarrito.get('/', (req, res) => {
+    res.json({
         carrito
-    )
+    })
 })
 
 routerCarrito.delete("/:id", (req, res) => {
@@ -369,5 +370,28 @@ app.use("/api/carrito", routerCarrito);
 
 const server = app.listen(4000, () => {
     console.log(`Escuchando en el puerto ${server.address().port}`)
-})
+}) 
+
+*/
+
+
+// ------------------------------------- sql -----------------------------------------------------------------------------------------------------
+
+
+//const { options } = require("./mariaDB/conexion")
+const { options } = require("./sqlite3/sqlite")
+
+const knex = require('knex')(options)
+
+const {Contenedor} = require("./contenedor.js")
+
+
+const contenedor = new Contenedor(options); 
+contenedor.crearTabla("Alvaro");
+//contenedor.agregarProductos("Alvaro");
+//contenedor.modificarProducto("alvaro","tensor",300);
+//contenedor.borrarProducto("alvaro",1);
+
+
+
 

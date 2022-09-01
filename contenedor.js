@@ -60,6 +60,7 @@ leerArchivo();
 
 
 /* 
+
 const productos = [
     { id:1, nombre:'Escuadra', precio:323.45 },
     { id:2, nombre:'Calculadora', precio:234.56 },
@@ -79,6 +80,8 @@ mostrarNombre();
 */
 
 
+
+/* 
 
 const fs = require('fs');
 
@@ -195,6 +198,75 @@ contenedor.getById(5);
 
 
 module.exports =   { Contenedor }
+
+*/
+
+//const { options } = require("./mariaDB/conexion")
+const { options } = require("./sqlite3/sqlite")
+const knex = require('knex')(options)
+
+class Contenedor{
+    constructor(options, nombreTabla){
+        this.options = options
+        this.nombreTabla = nombreTabla
+    }
+
+    async crearTabla(nombreTabla){
+        try {
+            await knex.schema.createTable(nombreTabla, table =>{
+                table.increments('id')
+                table.string('nombre')
+                table.integer('precio')    
+            })
+            console.log('Tabla creada')
+        } catch (error) {
+            console.log(error)
+        } 
+        
+    }
+
+    async agregarProductos(nombreTabla){
+        const productos =
+        [
+            {nombre: 'Tensor', precio: 100},
+            {nombre: 'Plomada', precio: 800},
+            {nombre: 'Rastrillo', precio: 120},
+            {nombre: 'Roldana', precio: 200},
+            {nombre: 'Barrehoja', precio: 150}
+        ]
+        try {
+            await knex(nombreTabla).insert(productos);
+            console.log("Los productos han sido insertados")
+        }catch(error){
+            console.log(error)
+        } 
+    }
+
+    async modificarProducto(nombreTabla, nombresProducto, nuevoPrecio){
+        try{
+            await knex.from(nombreTabla).where("nombre", nombresProducto ).update({
+                precio: nuevoPrecio 
+        })
+        console.log("El precio ha sido modificado")
+        }catch(error){
+            console.log(error);
+        }
+    }
+
+    async borrarProducto(nombreTabla, id){
+        try{
+            await knex.from(nombreTabla).where('id', '=', id).del();
+            console.log("El producto ha sido borrado");
+        }catch(error){
+            console.log(error);
+        }
+    }
+    
+ }
+
+
+module.exports =   { Contenedor }
+
 
 
 
